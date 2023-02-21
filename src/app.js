@@ -3,11 +3,13 @@ const express = require('express');
 const cors = require('cors');
 
 const routerApi = require('./routes');
+const useGraphql = require('./graphql/index');
+
 const { checkApiKey } = require('./middlewares/auth.handler');
 
 const { logErrors, errorHandler, boomErrorHandler, ormErrorHandler } = require('./middlewares/error.handler');
 
-const createApp = () => {
+const createApp = async () => {
   const app = express();
 
   app.use(express.json());
@@ -22,6 +24,8 @@ const createApp = () => {
   app.get('/nueva-ruta', checkApiKey, (req, res) => {
     res.send('Hola, soy una nueva ruta');
   });
+
+  await useGraphql(app)
 
   routerApi(app);
 
